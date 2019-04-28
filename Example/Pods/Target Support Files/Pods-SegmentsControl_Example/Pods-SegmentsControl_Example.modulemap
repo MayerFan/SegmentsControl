@@ -1,0 +1,6 @@
+framework module Pods_SegmentsControl_Example {
+  umbrella header "Pods-SegmentsControl_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

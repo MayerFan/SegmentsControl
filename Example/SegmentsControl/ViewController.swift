@@ -7,17 +7,16 @@
 //
 
 import UIKit
+import SegmentsControl
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        
+        let segment = SegmentControl(titles: ["apple", "peach", "lemon", "pear", "banana", "grape", "orange", "cherry", "watermelon"])
+        view.addSubview(segment)
+        segment.frame = CGRect(x: 15, y: 88, width: view.frame.width - 30, height: 44)
     }
 
 }
