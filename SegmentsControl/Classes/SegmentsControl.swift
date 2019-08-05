@@ -38,11 +38,11 @@ public enum ContentAlign {
 public enum UnderlineStyle {
     /// 固定宽度
     case fixed
-    /// 动态宽度。和字体内容等宽
+    /// 动态宽度。和title内容等宽
     case dynamic
 }
 
-public class SegmentControl: UIScrollView {
+public class SegmentsControl: UIScrollView {
     
     fileprivate let underlineLayer = CALayer()
     fileprivate var titleArray: [String]
@@ -85,6 +85,12 @@ public class SegmentControl: UIScrollView {
     
     /// 文本字体
     public var textFont = UIFont.systemFont(ofSize: 16) {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    /// 选中文本字体
+    public var selectedFont: UIFont? {
         didSet {
             setNeedsDisplay()
         }
@@ -161,7 +167,7 @@ public class SegmentControl: UIScrollView {
 }
 
 //MARK: - Private method
-extension SegmentControl {
+extension SegmentsControl {
     /// 绘制方法
     override public func draw(_ rect: CGRect) {
         calculate()
@@ -174,13 +180,18 @@ extension SegmentControl {
         for (index, title) in titleArray.enumerated() {
             let rect = titleRectArray[index]
             
+            var curFont = textFont
+            if selectedFont != nil && index == selectedIndex {
+                curFont = selectedFont!
+            }
+            
             let textLayer = CATextLayer()
             textLayer.frame = rect
             textLayer.string = title
-            textLayer.font = textFont
+            textLayer.font = curFont
             textLayer.alignmentMode = kCAAlignmentCenter
             textLayer.contentsScale = UIScreen.main.scale;
-            textLayer.fontSize = textFont.pointSize
+            textLayer.fontSize = curFont.pointSize
             textLayer.foregroundColor = textColor.cgColor
             
             layer.addSublayer(textLayer)
@@ -266,8 +277,12 @@ extension SegmentControl {
     /// - Returns: 返回一个内容总宽度
     fileprivate func cacheTitleSize() -> Double {
         var contentWidth = 0.0
-        for title in titleArray {
-            let size = title.boundingSize(size: CGSize(width: frame.width, height: frame.height), font: textFont)
+        for (index, title) in titleArray.enumerated() {
+            var curFont = textFont
+            if selectedFont != nil && index == selectedIndex {
+                curFont = selectedFont!
+            }
+            let size = title.boundingSize(size: CGSize(width: frame.width, height: frame.height), font: curFont)
             titleSizeArray.append(size)
             contentWidth += Double(size.width)
         }
@@ -353,12 +368,13 @@ extension SegmentControl {
 }
 
 //MARK: - 对外接口
-extension SegmentControl {
+extension SegmentsControl {
     /// 切换索引
     public func switchIndex(_ index: Int) {
         lastSelectedIndex = selectedIndex
         selectedIndex = index
-        updateAppear()
+//        updateAppear()
+        setNeedsDisplay()
     }
     
     public func updateTitles(_ titles: [String]) {
@@ -369,7 +385,7 @@ extension SegmentControl {
 }
 
 //MARK: - 点击后的逻辑处理
-extension SegmentControl {
+extension SegmentsControl {
     
     override public func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         let touch = touches.first
@@ -382,9 +398,12 @@ extension SegmentControl {
                 lastSelectedIndex = selectedIndex
                 // 更新最新选中
                 selectedIndex = index
-                updateAppear()
+//                updateAppear()
+                setNeedsDisplay()
                 
-                autoScrollSegmentToCenter(touchedIndex: selectedIndex)
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.005) {
+                    self.autoScrollSegmentToCenter(touchedIndex: self.selectedIndex)
+                }
                 
                 if let block = selectedBlock {
                     block(selectedIndex)
