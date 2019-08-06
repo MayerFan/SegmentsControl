@@ -1,5 +1,5 @@
 PODS:
-  - SegmentsControl (0.1.0)
+  - SegmentsControl (0.2.0)
 
 DEPENDENCIES:
   - SegmentsControl (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  SegmentsControl: d53433c1e26b9319dbc83b1e707d922039fef4b3
+  SegmentsControl: 8ebb6bf689523af85d1af94ed1e104d6a0c2a9d5
 
 PODFILE CHECKSUM: 0af4f548ccc05d9118e88070721ca655034db9fd
 

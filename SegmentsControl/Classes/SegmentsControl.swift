@@ -42,6 +42,7 @@ public enum UnderlineStyle {
     case dynamic
 }
 
+@objcMembers
 public class SegmentsControl: UIScrollView {
     
     fileprivate let underlineLayer = CALayer()

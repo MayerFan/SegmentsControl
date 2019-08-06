@@ -16,6 +16,7 @@ private let kNavBarAndStatusBarHeight:(() -> Float) = { () -> Float in
     return height
 }
 
+@objcMembers
 open class SegmentsController: UIViewController {
 
     fileprivate let scrollView = UIScrollView()
