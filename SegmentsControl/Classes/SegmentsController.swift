@@ -169,6 +169,7 @@ public extension SegmentsController {
         let offsetX = Double(index) * Double(self.view.frame.width);
         self.scrollView.setContentOffset(CGPoint(x: offsetX, y: 0), animated: true)
         
+        preAddView()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.saveCurView()
         }
@@ -185,6 +186,7 @@ public extension SegmentsController {
             segmentControl.switchIndex(index)
         }
         
+        preAddView()
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
             self.saveCurView()
         }
