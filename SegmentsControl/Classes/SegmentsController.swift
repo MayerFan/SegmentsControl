@@ -83,12 +83,36 @@ open class SegmentsController: UIViewController {
     
     /// 保留当前显示的视图
     private func saveCurView() {
-//        staticalViewIndex = selectedIndex
-        
         let curVC = childArray[selectedIndex]
         for view in scrollView.subviews {
             if view != curVC.view {
                 view.removeFromSuperview()
+            }
+        }
+    }
+    
+    /// 预加载
+    private func preAddView() {
+        let count = childArray.count
+        if count < 3 {
+            for index in 0..<count {
+                addView(index: index)
+            }
+            
+        } else { // 加载当前页和左右页面
+            var leftIndex = selectedIndex - 1
+            var rightIndex = selectedIndex + 1
+            leftIndex = leftIndex < 0 ? 0 : leftIndex
+            rightIndex = rightIndex > count - 1 ? count - 1 : rightIndex
+            
+            if leftIndex != selectedIndex {
+                addView(index: leftIndex)
+            }
+            
+            addView(index: selectedIndex)
+            
+            if rightIndex != selectedIndex {
+                addView(index: rightIndex)
             }
         }
     }
@@ -171,25 +195,27 @@ public extension SegmentsController {
 //MARK: - UIScrollViewDelegate
 extension SegmentsController: UIScrollViewDelegate {
     
+    open func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        preAddView()
+    }
+    
     open func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let width = Double(view.frame.width)
         let offset = width * Double(selectedIndex)
         let currentX = Double(scrollView.contentOffset.x)
         
         if offset > currentX { //右滑
-            addView(index: selectedIndex - 1)
-            
             if (offset - currentX) >= width/2 {
                 selectedIndex -= 1
                 selectedIndex = selectedIndex < 0 ? 0 : selectedIndex
+                preAddView()
             }
             
         } else { //左滑
-            addView(index: selectedIndex + 1)
-            
             if currentX - offset >= width/2 {
                 selectedIndex += 1
                 selectedIndex = selectedIndex > childArray.count - 1 ? childArray.count - 1 : selectedIndex
+                preAddView()
             }
         }
     }
