@@ -57,7 +57,6 @@ class ShowController: SegmentsController {
         self.addChildControllers([test1, test2, test3], titles: ["规则设置", "交易通知", "知"]) { [unowned self](index) in
             self.segments.switchIndex(index)
         }
-        
 //        self.navigationItem.titleView = segments
     }
 

@@ -70,6 +70,16 @@ open class SegmentsController: UIViewController {
         }
     }
     
+    override open func viewDidLayoutSubviews() {
+        var scrollViewOffsetY: Double = 0
+        if let _ = titleArray {
+            segmentControl.frame = CGRect(x: Double(segmentControl.frame.minX), y: Double(segmentControl.frame.minY), width: Double(view.frame.width), height: segmentHeight)
+            scrollViewOffsetY = Double(segmentControl.frame.maxY)
+        }
+        scrollView.frame = CGRect(x: 0, y: scrollViewOffsetY, width: Double(view.frame.width), height: Double(view.frame.height) - scrollViewOffsetY)
+        scrollView.contentSize = CGSize(width: Double(childArray.count) * Double(view.frame.width), height: Double(scrollView.frame.height))
+    }
+    
     /// 增加视图
     private func addView(index: Int) {
         guard index >= 0 else { return}
@@ -144,7 +154,6 @@ public extension SegmentsController {
         }
         addView(index: 0)
         
-        var scrollViewOffsetY: Double = 0
         if let _ = titles {
             view.addSubview(segmentControl)
             segmentControl.selectedBlock = { [unowned self] (index) in
@@ -152,15 +161,11 @@ public extension SegmentsController {
             }
             
             var offsetY = 0.0
-            if navigationController != nil && !navigationController!.isNavigationBarHidden {
+            if navigationController != nil && !navigationController!.isNavigationBarHidden && navigationController!.navigationBar.isTranslucent {
                 offsetY = Double(kNavBarAndStatusBarHeight())
             }
             segmentControl.frame = CGRect(x: 0, y: offsetY, width: Double(view.frame.width), height: segmentHeight)
-            scrollViewOffsetY = Double(segmentControl.frame.maxY)
         }
-        
-        scrollView.frame = CGRect(x: 0, y: scrollViewOffsetY, width: Double(view.frame.width), height: Double(view.frame.height) - scrollViewOffsetY)
-        scrollView.contentSize = CGSize(width: Double(controllers.count) * Double(view.frame.width), height: Double(scrollView.frame.height))
     }
     
     /// 内部切换视图，避免循环问题

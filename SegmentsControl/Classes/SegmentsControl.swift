@@ -15,7 +15,7 @@ import Foundation
 public typealias kClosureIndexBlock = (Int) -> ()
 
 //MARK: - 分块样式
-public enum SegmentStyle {
+@objc public enum SegmentStyle: Int {
     /// 均分宽度。根据title个数均分宽度
     case average
     /// 动态宽度。根据字体内容
@@ -25,7 +25,7 @@ public enum SegmentStyle {
 }
 
 //MARK: - 内容排列 此种情况只用于 SegmentStyle.dynamic 和 equal 情况。尤其是title所有宽度小于当前控件宽度的时候。是居于哪排列
-public enum ContentAlign {
+@objc public enum ContentAlign: Int {
     /// segment靠左排列
     case left
     /// segment优先居中排列
@@ -35,7 +35,7 @@ public enum ContentAlign {
 }
 
 //MARK: - 下划线样式
-public enum UnderlineStyle {
+@objc public enum UnderlineStyle: Int {
     /// 固定宽度
     case fixed
     /// 动态宽度。和title内容等宽
