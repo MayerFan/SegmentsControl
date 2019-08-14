@@ -22,6 +22,7 @@ open class SegmentsController: UIViewController {
     fileprivate let scrollView = UIScrollView()
     public lazy var segmentControl: SegmentsControl = {
         let control = SegmentsControl(titles: titleArray!)
+        control.addObserver(self, forKeyPath: "frame", options: .new, context: nil)
         return control
     }()
     
@@ -70,7 +71,7 @@ open class SegmentsController: UIViewController {
         }
     }
     
-    override open func viewDidLayoutSubviews() {
+    override open func viewWillLayoutSubviews() {
         var scrollViewOffsetY: Double = 0
         if let _ = titleArray {
             segmentControl.frame = CGRect(x: Double(segmentControl.frame.minX), y: Double(segmentControl.frame.minY), width: Double(view.frame.width), height: segmentHeight)
@@ -166,6 +167,7 @@ public extension SegmentsController {
             }
             segmentControl.frame = CGRect(x: 0, y: offsetY, width: Double(view.frame.width), height: segmentHeight)
         }
+        scrollView.contentSize = CGSize(width: Double(childArray.count) * Double(view.frame.width), height: 0)
     }
     
     /// 内部切换视图，避免循环问题
@@ -236,6 +238,18 @@ extension SegmentsController: UIScrollViewDelegate {
     
         if let block = selectedClickBlock {
             block(selectedIndex)
+        }
+    }
+}
+
+/// kvo
+extension SegmentsController {
+    open override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if let _ = change {
+            let rect = change![NSKeyValueChangeKey.newKey] as? CGRect
+            if let _ = rect {
+                segmentHeight = Double(rect!.height)
+            }
         }
     }
 }
